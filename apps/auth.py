@@ -34,7 +34,7 @@ def setup_request():
     if 'email' in request.session:
         request.current_user = get_user(request.session['email'])
 
-
+@app.get('/')
 @app.get('/login')
 @app.post('/login')
 def login(db):
