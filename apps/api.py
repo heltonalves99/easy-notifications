@@ -4,10 +4,10 @@ from apns import APNs, Payload
 from bottle import Bottle, request
 from bson.objectid import ObjectId
 
-app = Bottle()
+api_app = Bottle()
 
 
-@app.post('/device')
+@api_app.post('/device')
 def add_device(db):
     token = request.forms.get('token', None)
     if token:
@@ -16,7 +16,7 @@ def add_device(db):
     return {'error': '"token" is required.'}
 
 
-@app.post('/push')
+@api_app.post('/push')
 def send_push(db):
     device = request.forms.get('device', None)
     custom_payload = request.forms.get('payload', None)

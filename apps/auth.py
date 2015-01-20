@@ -5,19 +5,19 @@ from bottle.ext.mongo import MongoPlugin
 from passlib.apps import custom_app_context as pwd_context
 from utils import check_login, get_user
 
-app = Bottle()
+auth_app = Bottle()
 
 mongo = MongoPlugin(uri="mongodb://127.0.0.1",
                     db="easy_notifications",
                     json_mongo=True,
                     keyword='db')
 
-app.install(mongo)
+auth_app.install(mongo)
 
 
-@app.get('/')
-@app.get('/login')
-@app.post('/login')
+@auth_app.get('/')
+@auth_app.get('/login')
+@auth_app.post('/login')
 def login(db):
     if request.method == 'GET':
         return template('dashboard/login')
@@ -34,14 +34,14 @@ def login(db):
         redirect('/auth/login')
 
 
-@app.route('/logout')
+@auth_app.route('/logout')
 def logout():
     request.session.delete()
     redirect('/auth/login')
 
 
-@app.get('/register')
-@app.post('/register')
+@auth_app.get('/register')
+@auth_app.post('/register')
 def register(db):
     if request.method == 'GET':
         return template('dashboard/register')
