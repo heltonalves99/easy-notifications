@@ -4,6 +4,6 @@ from bottle import jinja2_template as template
 app = Bottle()
 
 
-@app.get('/<page>')
-def pages(page):
-    return template('dashboard/{}'.format(page))
+@app.get('/')
+def pages():
+    return template('dashboard/list')

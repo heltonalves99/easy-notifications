@@ -1,21 +1,25 @@
 from bottle import Bottle, run, static_file
-from bottle.ext.mongo import MongoPlugin
-from apps import dashboard, api
+from beaker.middleware import SessionMiddleware
+from apps import dashboard, api, auth
 
 app = Bottle()
 
-mongo = MongoPlugin(uri="mongodb://127.0.0.1",
-                    db="easy_notifications",
-                    json_mongo=True,
-                    keyword='db')
-
-app.install(mongo)
+app.mount('/api', api.app)
+app.mount('/auth', auth.app)
 app.mount('/dashboard', dashboard.app)
-app.mount('/api', api.app, skip=None)
 
 
 @app.route('/assets/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='./assets')
 
-run(app, host='localhost', port='8080', debug=True, reloader=True)
+session_opts = {
+    'session.type': 'file',
+    'session.cookie_expires': True,
+    'session.data_dir': './data_sessions',
+    'session.auto': True
+}
+
+session_app = SessionMiddleware(app, session_opts)
+
+run(session_app, host='localhost', port='8080', debug=True, reloader=True)
