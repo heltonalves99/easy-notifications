@@ -15,25 +15,6 @@ mongo = MongoPlugin(uri="mongodb://127.0.0.1",
 app.install(mongo)
 
 
-def authenticated(func):
-    def wrapper(db, *args, **kwargs):
-        session = request.environ.get('beaker.session')
-
-        if 'email' in session:
-            return func(db, *args, **kwargs)
-
-        redirect('/')
-    return wrapper
-
-
-@app.hook('before_request')
-def setup_request():
-    request.session = request.environ['beaker.session']
-    request.current_user = None
-
-    if 'email' in request.session:
-        request.current_user = get_user(request.session['email'])
-
 @app.get('/')
 @app.get('/login')
 @app.post('/login')
