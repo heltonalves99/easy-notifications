@@ -1,3 +1,11 @@
+html, body, body > .container-fluid, .container-fluid > .row, .sidebar
+{
+	height: 100%;
+}
+body
+{ 
+	padding-top: 50px;
+}
 .form-signin
 {
     max-width: 330px;
@@ -77,4 +85,24 @@
     display: block;
     margin-top: 10px;
 }
-
+.sidebar {
+	background: #222;
+	padding: 0;
+}
+.sidebar .nav-pills > li > a,
+.sidebar .nav-pills > li > a:hover,
+.sidebar .nav-pills > li > a:focus {
+	color: #fff;
+}
+.sidebar .nav-pills > li.active > a,
+.sidebar .nav-pills > li.active > a:hover,
+.sidebar .nav-pills > li.active > a:focus {
+	background: #080808;
+}
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus {
+	background: #444;
+}
+.sidebar .nav-pills > li > a {
+	border-radius: 0;
+}
