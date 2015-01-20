@@ -1,0 +1,24 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_body %}
+	<h1>Add Device <small>manually add device</small></h1>
+	<hr>
+	<form action="" method="post">
+		<div class="form-group">
+			<label for="id_certificate">Certificate</label>
+			<select id="id_certificate" class="form-control">
+				<option>MyApp Production 1</option>
+				<option>MyApp SandBox 1</option>
+			</select>
+		</div>	
+		<div class="form-group">
+			<label for="id_token">Device Token</label>
+			<input type="text" class="form-control" id="id_token" placeholder="Device token">
+		</div>
+		<div class="form-group">
+			<label for="id_info">Device Info</label>
+			<input type="text" class="form-control" id="id_info" placeholder="Jhon's iPhone">
+		</div>
+		<input class="btn btn-primary" type="button" value="Register">
+	</form>
+{% endblock %}
