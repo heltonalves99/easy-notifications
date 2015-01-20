@@ -2,6 +2,7 @@
 __pycache__/
 *.py[coid]
 *~
+data_sessions
 
 # C extensions
 *.so

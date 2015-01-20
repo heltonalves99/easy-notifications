@@ -16,4 +16,16 @@ dashboard_app.install(mongo)
 @dashboard_app.get('/')
 @authenticated
 def home(db):
-    return template('dashboard/list')
+    return template('dashboard/base_dashboard')
+
+
+@dashboard_app.get('/certificates')
+@authenticated
+def certificates(db):
+    return template('dashboard/list', title='Certificates')
+
+
+@dashboard_app.get('/devices')
+@authenticated
+def devices(db):
+    return template('dashboard/list', title='Devices')

@@ -20,7 +20,7 @@ auth_app.install(mongo)
 @auth_app.post('/login')
 def login(db):
     if request.method == 'GET':
-        return template('dashboard/login')
+        return template('dashboard/login', title='Login')
 
     email = request.forms.get('email')
     password = request.forms.get('password')
@@ -44,7 +44,7 @@ def logout():
 @auth_app.post('/register')
 def register(db):
     if request.method == 'GET':
-        return template('dashboard/register')
+        return template('dashboard/register', title='Registration')
 
     email = request.forms.get('email')
     password = request.forms.get('password')

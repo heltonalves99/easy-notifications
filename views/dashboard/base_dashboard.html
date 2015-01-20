@@ -1,5 +1,7 @@
 {% extends "dashboard/base.html" %}
 
+{% block page_title %}Dashboard{% if title %} - {{ title }}{% endif %}{% endblock %}
+
 {% block body %}
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
@@ -25,9 +27,9 @@
 	<div class="row">
 		<div class="col-md-2 sidebar">
 			<ul class="nav nav-pills nav-stacked">
-				<li class="active"><a href="#"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Dashboard</a></li>	
-				<li><a href="#"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Certificates</a></li>	
-				<li><a href="#"><span class="glyphicon glyphicon-phone" aria-hidden="true"></span> Devices</a></li>	
+				<li{% if not title %} class="active"{% endif %}><a href="/dashboard"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Dashboard</a></li>	
+				<li{% if title == "Certificates" %} class="active"{% endif %}><a href="/dashboard/certificates"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Certificates</a></li>	
+				<li{% if title == "Devices" %} class="active"{% endif %}><a href="/dashboard/devices"><span class="glyphicon glyphicon-phone" aria-hidden="true"></span> Devices</a></li>	
 				<li><a href="#"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Documentation</a></li>	
 			</ul>
 		</div>
