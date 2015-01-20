@@ -1,4 +1,5 @@
-from bottle import Bottle, template
+from bottle import Bottle
+from bottle import jinja2_template as template
 
 app = Bottle()
 
