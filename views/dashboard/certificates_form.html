@@ -1,7 +1,7 @@
 {% extends "dashboard/base_dashboard.html" %}
 
 {% block dashboard_body %}
-	<h1>Certificates <small>add a new certificate</small></h1>
+	<h1>Certificates <small>{% if certificate %}edit your{% else %}add a new{% endif %} certificate</small></h1>
 	<hr>
 	<form action="" method="post">
 		<div class="form-group">
@@ -12,23 +12,23 @@
 		</div>
 		<div class="form-group">	
 			<label class="radio-inline">
-				<input type="radio" name="type" value="production" checked> Production
+				<input type="radio" name="type" value="production"{% if certificate.type == 'production' or not certificate %} checked{% endif %}> Production
 			</label>
 			<label class="radio-inline">
-				<input type="radio" name="type" value="sandbox"> Sandbox
+				<input type="radio" name="type" value="sandbox"{% if certificate.type == 'sandbox' %} checked{% endif %}> Sandbox
 			</label>
 		</div>
 		<div class="form-group">
 			<label for="id_name">Name</label>
-			<input name="name" type="text" class="form-control" id="id_name" placeholder="Certificate name" required>
+			<input name="name" type="text" class="form-control" id="id_name" placeholder="Certificate name"{% if certificate.name %} value="{{ certificate.name }}"{% endif %} required>
 		</div>
 		<div class="form-group">
 			<label for="id_cert_pem">Certificate (.pem format)</label>
-			<textarea class="form-control" id="id_cert_pem" rows="4" required></textarea>
+			<textarea name="cert_pem" class="form-control" id="id_cert_pem" rows="4" required>{% if certificate.cert_pem %}{{ certificate.cert_pem }}{% endif %}</textarea>
 		</div>
 		<div class="form-group">
 			<label for="id_cert_key">Key (.pem format)</label>
-			<textarea class="form-control" id="id_cert_key" rows="4" required></textarea>
+			<textarea name="cert_key" class="form-control" id="id_cert_key" rows="4" required>{% if certificate.cert_key %}{{ certificate.cert_key }}{% endif %}</textarea>
 		</div>
 		<input class="btn btn-primary" type="submit" value="Register">
 	</form>
