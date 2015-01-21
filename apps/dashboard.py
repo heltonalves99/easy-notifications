@@ -90,4 +90,4 @@ def certificates_remove(db, id):
 @dashboard_app.get('/devices')
 @authenticated
 def devices(db):
-    return template('dashboard/list', title='Devices')
+    return template('dashboard/devices', title='Devices')
