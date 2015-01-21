@@ -1,0 +1,35 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_body %}
+	<h1>Certificates <small>add a new certificate</small></h1>
+	<hr>
+	<form action="" method="post">
+		<div class="form-group">
+			<label for="id_platform">Platform</label>
+			<select name="platform" id="id_platform" class="form-control" required>
+				<option value="ios">Apple Push Notification (IOS)</option>
+			</select>
+		</div>
+		<div class="form-group">	
+			<label class="radio-inline">
+				<input type="radio" name="type" value="production" checked> Production
+			</label>
+			<label class="radio-inline">
+				<input type="radio" name="type" value="sandbox"> Sandbox
+			</label>
+		</div>
+		<div class="form-group">
+			<label for="id_name">Name</label>
+			<input name="name" type="text" class="form-control" id="id_name" placeholder="Certificate name" required>
+		</div>
+		<div class="form-group">
+			<label for="id_cert_pem">Certificate (.pem format)</label>
+			<textarea class="form-control" id="id_cert_pem" rows="4" required></textarea>
+		</div>
+		<div class="form-group">
+			<label for="id_cert_key">Key (.pem format)</label>
+			<textarea class="form-control" id="id_cert_key" rows="4" required></textarea>
+		</div>
+		<input class="btn btn-primary" type="submit" value="Register">
+	</form>
+{% endblock %}

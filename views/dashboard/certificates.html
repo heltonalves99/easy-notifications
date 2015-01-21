@@ -1,0 +1,39 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_body %}
+	<h1>Certificates <small>manage your app certificates</small></h1>
+	<hr>
+	<a href="/dashboard/certificates/add" class="btn btn-primary">New certificate</a>
+	<hr>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Certificate Name</th>
+				<th>Platform</th>
+				<th>Type</th>
+				<th>Devices</th>
+				<th>Options</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for cert in certificates %}
+			<tr>
+				<td>{{ cert.name }}</td>
+				<td>{{ cert.platform }}</td>
+				<td>{{ cert.type }}</td>
+				<td>{{ cert.devices }}</td>
+				<td>
+					<div class="btn-group" role="group" aria-label="certificate options">
+						<button type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
