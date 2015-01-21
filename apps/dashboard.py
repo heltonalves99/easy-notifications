@@ -1,6 +1,7 @@
 from bottle import Bottle, request, redirect
 from bottle import jinja2_template as template
 from bottle.ext.mongo import MongoPlugin
+from bson.objectid import ObjectId
 from utils import authenticated
 
 dashboard_app = Bottle()
@@ -44,6 +45,13 @@ def certificates_add(db):
         'devices': 0
     })
 
+    redirect('/dashboard/certificates')
+
+
+@dashboard_app.get('/certificates/remove/<id>')
+def certificates_remove(db, id):
+    # need validation
+    db['certificates'].remove({'_id': ObjectId(id)})
     redirect('/dashboard/certificates')
 
 
