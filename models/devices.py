@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
+from certificates import Certificate
 from . import Base
 
 
@@ -12,7 +13,7 @@ class Device(Base):
     token = Column(String(50))
     status = Column(Boolean)
 
-    certificate = relationship("Certificate", backref=backref('devices', order_by=id))
+    certificate = relationship(Certificate, backref=backref('devices', order_by=id))
 
     def __init__(self, name, token, status):
         self.name = name

@@ -1,11 +1,9 @@
 from bottle import Bottle, run, static_file
-from apps import dashboard, api, auth
+from controllers import certificates
 
 app = Bottle()
 
-app.mount('/api', api.api_app)
-app.mount('/auth', auth.auth_app)
-app.mount('/dashboard', dashboard.dashboard_app)
+app.mount('/api/certificates', certificates.app)
 
 
 @app.route('/assets/<filepath:path>')
