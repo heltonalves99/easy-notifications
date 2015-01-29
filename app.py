@@ -1,32 +1,14 @@
-from bottle import Bottle, run, static_file, request
-from beaker.middleware import SessionMiddleware
+from bottle import Bottle, run, static_file
 from apps import dashboard, api, auth
-from utils import get_user
 
-session_opts = {
-    'session.type': 'file',
-    'session.cookie_expires': True,
-    'session.data_dir': './data_sessions',
-    'session.auto': True
-}
+app = Bottle()
 
-app = SessionMiddleware(Bottle(), session_opts)
-
-app.wrap_app.mount('/api', api.api_app)
-app.wrap_app.mount('/auth', auth.auth_app)
-app.wrap_app.mount('/dashboard', dashboard.dashboard_app)
+app.mount('/api', api.api_app)
+app.mount('/auth', auth.auth_app)
+app.mount('/dashboard', dashboard.dashboard_app)
 
 
-@app.wrap_app.hook('before_request')
-def setup_request():
-    request.session = request.environ['beaker.session']
-    request.current_user = None
-
-    if 'email' in request.session:
-        request.current_user = get_user(request.session['email'])
-
-
-@app.wrap_app.route('/assets/<filepath:path>')
+@app.route('/assets/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='./assets')
 
