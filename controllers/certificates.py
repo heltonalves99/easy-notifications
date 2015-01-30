@@ -1,6 +1,9 @@
-from bottle import Bottle, request
+from bottle import Bottle, request, parse_auth
 from plugins import sqlplugin
+
+from models.users import User
 from models.certificates import Certificate
+from utils import check_pass
 
 app = Bottle()
 app.install(sqlplugin)
@@ -8,7 +11,15 @@ app.install(sqlplugin)
 
 @app.route('/', method='GET')
 def certificates(db):
-    query = db.query(Certificate).all()
+    if not check_pass(db):
+        return {'status': 'error', 'message': 'Error with auth data provided.'}
+
+    auth = request.headers.get('Authorization')
+    username, password = parse_auth(auth)
+
+    user = db.query(User).filter(User.username == username).first()
+
+    query = db.query(Certificate).filter(Certificate.user_id == user.id)
     data = []
     for item in query:
         dict = item.__dict__
@@ -19,8 +30,16 @@ def certificates(db):
 
 @app.route('/', method='POST')
 def add_certificates(db):
+    if not check_pass(db):
+        return {'status': 'error', 'message': 'Error with auth data provided.'}
+
+    auth = request.headers.get('Authorization')
+    username, password = parse_auth(auth)
+
+    user = db.query(User).filter(User.username == username).first()
+
     data = {
-        'user_id': request.forms.get('user_id'),
+        'user_id': user.id,
         'platform': request.forms.get('platform'),
         'type': request.forms.get('type'),
         'name': request.forms.get('name'),

@@ -1,8 +1,10 @@
 from bottle import Bottle, run, static_file
+from controllers import users
 from controllers import certificates
 
 app = Bottle()
 
+app.mount('/api/users', users.app)
 app.mount('/api/certificates', certificates.app)
 
 
