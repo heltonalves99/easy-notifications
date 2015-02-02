@@ -3,7 +3,7 @@ from plugins import sqlplugin
 
 from models.users import User
 from models.certificates import Certificate
-from utils import check_pass, authenticated
+from utils import authenticated
 
 app = Bottle()
 app.install(sqlplugin)

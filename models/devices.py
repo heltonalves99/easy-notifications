@@ -15,7 +15,8 @@ class Device(Base):
 
     certificate = relationship(Certificate, backref=backref('devices', order_by=id))
 
-    def __init__(self, name, token, status):
+    def __init__(self, certificate_id, name, token, status):
+        self.certificate_id
         self.name = name
         self.token = token
         self.status = status
