@@ -48,7 +48,7 @@ class TestCertificate(BaseTest):
         empty_json = {'results': []}
         self.assertEqual(response.json, empty_json)
 
-    def test_count_certificates(self):
+    def test_manual_add_certificates(self):
         self._auth()
         response = self.test_app.get('/api/certificates', expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
@@ -65,7 +65,7 @@ class TestCertificate(BaseTest):
         response = self.test_app.get('/api/certificates', expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
 
-    def test_add_certificates(self):
+    def test_api_add_certificates(self):
         self._auth()
 
         cert = {
