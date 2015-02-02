@@ -3,17 +3,15 @@ from plugins import sqlplugin
 
 from models.users import User
 from models.certificates import Certificate
-from utils import check_pass
+from utils import check_pass, authenticated
 
 app = Bottle()
 app.install(sqlplugin)
 
 
 @app.route('/', method='GET')
+@authenticated
 def certificates(db):
-    if not check_pass(db):
-        return {'status': 'error', 'message': 'Error with auth data provided.'}
-
     auth = request.headers.get('Authorization')
     username, password = parse_auth(auth)
 
@@ -29,10 +27,8 @@ def certificates(db):
 
 
 @app.route('/', method='POST')
+@authenticated
 def add_certificates(db):
-    if not check_pass(db):
-        return {'status': 'error', 'message': 'Error with auth data provided.'}
-
     auth = request.headers.get('Authorization')
     username, password = parse_auth(auth)
 
