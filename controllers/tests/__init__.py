@@ -5,6 +5,7 @@ import app
 from webtest import TestApp
 from plugins import sql_plugin
 from models import Base, test_engine
+from sqlalchemy.orm import sessionmaker
 
 
 class BaseTest(unittest.TestCase):
@@ -16,9 +17,15 @@ class BaseTest(unittest.TestCase):
 
         app.main.uninstall('sqlalchemy')
         app.main.install(sql_plugin(test=True))
+
         self.test_app = TestApp(app.main)
+        session = sessionmaker(bind=test_engine)
+        self.db = session()
         Base.metadata.create_all(test_engine)
 
     def tearDown(self):
         db_file = os.path.abspath('test_database.sqlite3')
-        os.remove(db_file)
+        try:
+            os.remove(db_file)
+        except OSError:
+            pass
