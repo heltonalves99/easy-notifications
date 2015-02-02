@@ -17,7 +17,7 @@ def certificates(db):
 
     user = db.query(User).filter(User.username == username).first()
 
-    query = db.query(Certificate).filter(Certificate.user_id == user.id)
+    query = db.query(Certificate).filter(Certificate.user == user)
     data = []
     for item in query:
         dict = item.__dict__
@@ -35,7 +35,7 @@ def add_certificates(db):
     user = db.query(User).filter(User.username == username).first()
 
     data = {
-        'user_id': user.id,
+        'user': user,
         'platform': request.forms.get('platform'),
         'type': request.forms.get('type'),
         'name': request.forms.get('name'),
@@ -44,4 +44,6 @@ def add_certificates(db):
     }
     certificate = Certificate(**data)
     db.add(certificate)
+    data.pop('user')
+    data['user_id'] = user.id
     return data
