@@ -1,12 +1,12 @@
 from bottle import Bottle, request, parse_auth
-from plugins import sqlplugin
+from plugins import sql_plugin
 
 from models.users import User
 from models.certificates import Certificate
 from utils import authenticated
 
 app = Bottle()
-app.install(sqlplugin)
+app.install(sql_plugin())
 
 
 @app.route('/', method='GET')

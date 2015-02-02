@@ -1,11 +1,11 @@
 from bottle import Bottle, request
 from passlib.hash import sha256_crypt
-from plugins import sqlplugin
+from plugins import sql_plugin
 
 from models.users import User
 
 app = Bottle()
-app.install(sqlplugin)
+app.install(sql_plugin())
 
 
 @app.route('/', method='POST')

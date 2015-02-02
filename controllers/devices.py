@@ -1,5 +1,5 @@
 from bottle import Bottle, request, parse_auth
-from plugins import sqlplugin
+from plugins import sql_plugin
 
 from models.certificates import Certificate
 from models.devices import Device
@@ -7,7 +7,7 @@ from models.users import User
 from utils import authenticated
 
 app = Bottle()
-app.install(sqlplugin)
+app.install(sql_plugin())
 
 
 @app.route('/', method='GET')
