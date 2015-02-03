@@ -102,12 +102,12 @@ class TestDevice(BaseTest):
 
         response = self.test_app.post(self.base_url, device, expect_errors=True)
 
-        # verifying if user2 sees the certificate
+        # verifying if user2 sees the device
         self._auth2()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
 
-        # verifying if user1 sees the certificate
+        # verifying if user1 sees the device
         self._auth()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
