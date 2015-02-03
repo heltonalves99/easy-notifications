@@ -1,4 +1,3 @@
-import os
 import unittest
 import app
 
@@ -24,8 +23,4 @@ class BaseTest(unittest.TestCase):
         Base.metadata.create_all(test_engine)
 
     def tearDown(self):
-        db_file = os.path.abspath('test_database.sqlite3')
-        try:
-            os.remove(db_file)
-        except OSError:
-            pass
+        Base.metadata.drop_all(test_engine)
