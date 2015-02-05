@@ -10,3 +10,8 @@ pep8:
 .PHONY: test
 test:
 	@python -m unittest discover
+
+.PHONY: coverage
+coverage:
+	@coverage run --source=. -m unittest discover
+	@coverage report

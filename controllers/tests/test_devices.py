@@ -111,6 +111,3 @@ class TestDevice(BaseTest):
         self._auth()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
-
-if __name__ == '__main__':
-    unittest.main()

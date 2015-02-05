@@ -10,6 +10,8 @@ class TestCertificate(BaseTest):
     def setUp(self):
         super(TestCertificate, self).setUp()
 
+        self.base_url = '/api/certificates'
+
         self.user1 = User(
             username="john",
             email="johmail@foobar.com",
@@ -34,23 +36,23 @@ class TestCertificate(BaseTest):
 
     def test_access_denied(self):
         self.test_app.authorization = ('Basic', ('john', 'password-wrong'))
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(response.status_int, 401)
 
     def test_access_granted(self):
         self._auth()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(response.status_int, 200)
 
     def test_empty_json_response(self):
         self._auth()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         empty_json = {'results': []}
         self.assertEqual(response.json, empty_json)
 
     def test_manual_add_certificates(self):
         self._auth()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
         cert1 = Certificate(
             name='my-cert',
@@ -62,7 +64,7 @@ class TestCertificate(BaseTest):
         )
         self.db.add(cert1)
         self.db.commit()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
 
     def test_api_add_certificates(self):
@@ -76,7 +78,7 @@ class TestCertificate(BaseTest):
             'key_pem': 'key'
         }
 
-        response = self.test_app.post('/api/certificates', cert, expect_errors=True)
+        response = self.test_app.post(self.base_url, cert, expect_errors=True)
         cert['user_id'] = self.user1.id
         self.assertEqual(response.json, cert)
 
@@ -90,17 +92,14 @@ class TestCertificate(BaseTest):
             'cert_pem': 'cert',
             'key_pem': 'key'
         }
-        response = self.test_app.post('/api/certificates', cert, expect_errors=True)
+        response = self.test_app.post(self.base_url, cert, expect_errors=True)
 
         # verifying if user2 sees the certificate
         self._auth2()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
 
         # verifying if user1 sees the certificate
         self._auth()
-        response = self.test_app.get('/api/certificates', expect_errors=True)
+        response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
-
-if __name__ == '__main__':
-    unittest.main()
