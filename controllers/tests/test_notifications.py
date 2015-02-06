@@ -1,5 +1,3 @@
-import unittest
-
 from passlib.hash import sha256_crypt
 from models.users import User
 from . import BaseTest
@@ -33,12 +31,13 @@ class TestNotification(BaseTest):
         response = self.test_app.post(self.base_url, expect_errors=True)
         self.assertEqual(response.status_int, 200)
 
-    def test_receive_correct_data(self):
+    def test_receiving_valid_dict(self):
         self._auth()
-        import json
+
         data = {
-            'devices': ['abc123', 'abc456'],
-            'payload': json.dumps({'ya': True, 'yo': False, 'extra': {'y': False, 'n': True}})
+            'tokens': ['abc123', 'abcdef'],
+            'payload': '{non-valid-json}'
         }
+
         response = self.test_app.post(self.base_url, data, expect_errors=True)
-        self.assertEqual(response.json, data)
+        self.assertEqual(response.json, {'error': 'Payload must be a valid json.'})
