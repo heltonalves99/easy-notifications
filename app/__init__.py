@@ -1,5 +1,5 @@
-from bottle import Bottle, run, static_file
-from controllers import users, certificates, devices, notifications
+from bottle import Bottle, static_file
+from app.controllers import users, certificates, devices, notifications
 
 main = Bottle()
 
@@ -12,6 +12,3 @@ main.mount('/api/notifications', notifications.app)
 @main.route('/assets/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='./assets')
-
-if __name__ == '__main__':
-    run(main, host='localhost', port='8080', debug=True, reloader=True)

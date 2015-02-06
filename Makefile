@@ -9,7 +9,7 @@ pep8:
 
 .PHONY: test
 test:
-	@python -m unittest discover
+	@export APP_ENV=test && python -m unittest discover
 
 .PHONY: coverage
 coverage:

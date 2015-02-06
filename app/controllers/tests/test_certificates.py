@@ -1,16 +1,17 @@
 import unittest
 
 from passlib.hash import sha256_crypt
-from models.certificates import Certificate
-from models.devices import Device
-from models.users import User
+from app.models.certificates import Certificate
+from app.models.users import User
 from . import BaseTest
 
 
-class TestDevice(BaseTest):
+class TestCertificate(BaseTest):
     def setUp(self):
-        super(TestDevice, self).setUp()
-        self.base_url = '/api/devices'
+        super(TestCertificate, self).setUp()
+
+        self.base_url = '/api/certificates'
+
         self.user1 = User(
             username="john",
             email="johmail@foobar.com",
@@ -23,18 +24,8 @@ class TestDevice(BaseTest):
             password=sha256_crypt.encrypt("password")
         )
 
-        self.cert1 = Certificate(
-            name='my-cert',
-            platform='ios',
-            type='sandbox',
-            cert_pem='cert',
-            key_pem='key',
-            user=self.user1
-        )
-
         self.db.add(self.user1)
         self.db.add(self.user2)
-        self.db.add(self.cert1)
         self.db.commit()
 
     def _auth(self):
@@ -59,55 +50,56 @@ class TestDevice(BaseTest):
         empty_json = {'results': []}
         self.assertEqual(response.json, empty_json)
 
-    def test_manual_add_devices(self):
+    def test_manual_add_certificates(self):
         self._auth()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
-        device = Device(
-            name='my-device',
-            token='device-token',
-            status=True,
-            certificate=self.cert1
+        cert1 = Certificate(
+            name='my-cert',
+            platform='ios',
+            type='sandbox',
+            cert_pem='cert',
+            key_pem='key',
+            user=self.user1
         )
-        self.db.add(device)
+        self.db.add(cert1)
         self.db.commit()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)
 
-    def test_api_add_devices(self):
+    def test_api_add_certificates(self):
         self._auth()
 
-        device = {
-            'name': 'my-device',
-            'token': 'device-token',
-            'status': True,
-            'certificate': self.cert1.id
+        cert = {
+            'name': 'my-cert',
+            'platform': 'ios',
+            'type': 'sandbox',
+            'cert_pem': 'cert',
+            'key_pem': 'key'
         }
 
-        response = self.test_app.post(self.base_url, device, expect_errors=True)
-        device.pop('certificate')
-        device['certificate_id'] = self.cert1.id
-        self.assertEqual(response.json, device)
+        response = self.test_app.post(self.base_url, cert, expect_errors=True)
+        cert['user_id'] = self.user1.id
+        self.assertEqual(response.json, cert)
 
     def test_filter_by_user(self):
         # inserting certificate to user1
         self._auth()
-
-        device = {
-            'name': 'my-device',
-            'token': 'device-token',
-            'status': True,
-            'certificate': self.cert1.id
+        cert = {
+            'name': 'my-cert',
+            'platform': 'ios',
+            'type': 'sandbox',
+            'cert_pem': 'cert',
+            'key_pem': 'key'
         }
+        response = self.test_app.post(self.base_url, cert, expect_errors=True)
 
-        response = self.test_app.post(self.base_url, device, expect_errors=True)
-
-        # verifying if user2 sees the device
+        # verifying if user2 sees the certificate
         self._auth2()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 0)
 
-        # verifying if user1 sees the device
+        # verifying if user1 sees the certificate
         self._auth()
         response = self.test_app.get(self.base_url, expect_errors=True)
         self.assertEqual(len(response.json['results']), 1)

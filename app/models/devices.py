@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from certificates import Certificate
+from .certificates import Certificate
 from . import Base
 
 

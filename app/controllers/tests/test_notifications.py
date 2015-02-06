@@ -1,5 +1,5 @@
 from passlib.hash import sha256_crypt
-from models.users import User
+from app.models.users import User
 from . import BaseTest
 
 

@@ -1,18 +1,18 @@
 from bottle import Bottle, request, parse_auth
-from plugins import sql_plugin
 
-from models.certificates import Certificate
-from models.devices import Device
-from models.users import User
-from utils import authenticated
+from app.models.certificates import Certificate
+from app.models.devices import Device
+from app.models.users import User
+from app.models import session
+from app.utils import authenticated
 
 app = Bottle()
-app.install(sql_plugin())
+db = session()
 
 
 @app.route('/', method='GET')
 @authenticated
-def devices(db):
+def devices():
     auth = request.headers.get('Authorization')
     username, password = parse_auth(auth)
 
@@ -32,7 +32,7 @@ def devices(db):
 
 @app.route('/', method='POST')
 @authenticated
-def add_devices(db):
+def add_devices():
     cert_pk = int(request.forms.get('certificate'))
     cert = db.query(Certificate).filter(Certificate.id == cert_pk).first()
     data = {
@@ -43,6 +43,7 @@ def add_devices(db):
     }
     device = Device(**data)
     db.add(device)
+    db.commit()
     data.pop('certificate')
     data['certificate_id'] = cert_pk
     return data

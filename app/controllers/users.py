@@ -1,15 +1,15 @@
 from bottle import Bottle, request
 from passlib.hash import sha256_crypt
-from plugins import sql_plugin
 
-from models.users import User
+from app.models.users import User
+from app.models import session
 
 app = Bottle()
-app.install(sql_plugin())
+db = session()
 
 
 @app.route('/', method='POST')
-def users(db):
+def users():
     data = {
         'username': request.forms.get('username'),
         'email': request.forms.get('email'),
@@ -18,4 +18,5 @@ def users(db):
 
     user = User(**data)
     db.add(user)
+    db.commit()
     return {'status': 'ok', 'message': 'User successfully added.'}

@@ -1,18 +1,21 @@
 from bottle import request, response, parse_auth
 from passlib.hash import sha256_crypt
-from models.users import User
+from app.models.users import User
+from app.models import session
+
+db = session()
 
 
 def authenticated(func):
-    def wrapper(db, *args, **kwargs):
-        if check_pass(db):
-            return func(db, *args, **kwargs)
+    def wrapper(*args, **kwargs):
+        if check_pass():
+            return func(*args, **kwargs)
         response.status = 401
         return {'status': 'error', 'message': 'Error with auth data provided.'}
     return wrapper
 
 
-def check_pass(db):
+def check_pass():
     auth = request.headers.get('Authorization')
 
     if not auth:
