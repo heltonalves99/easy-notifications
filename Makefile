@@ -13,5 +13,5 @@ test:
 
 .PHONY: coverage
 coverage:
-	@coverage run --source=. -m unittest discover
+	@export APP_ENV=test && coverage run --source=. -m unittest discover
 	@coverage report
