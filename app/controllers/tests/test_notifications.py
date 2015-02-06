@@ -31,7 +31,7 @@ class TestNotification(BaseTest):
         response = self.test_app.post(self.base_url, expect_errors=True)
         self.assertEqual(response.status_int, 200)
 
-    def test_receiving_valid_dict(self):
+    def test_payload_must_be_valid_dict(self):
         self._auth()
 
         data = {
@@ -40,4 +40,28 @@ class TestNotification(BaseTest):
         }
 
         response = self.test_app.post(self.base_url, data, expect_errors=True)
-        self.assertEqual(response.json, {'error': 'Payload must be a valid json.'})
+        self.assertEqual(response.json, {'error': ['Payload must be a valid json.']})
+
+    def test_tokens_need_at_least_one_item(self):
+        import json
+        self._auth()
+        payload = {'abc': 123}
+
+        data = {
+            'tokens': [],
+            'payload': json.dumps(payload)
+        }
+
+        response = self.test_app.post(self.base_url, data, expect_errors=True)
+        self.assertEqual(response.json, {'error': ['Tokens need at least one item.']})
+
+    def test_need_return_error_list(self):
+        self._auth()
+        error_list = ['Payload must be a valid json.', 'Tokens need at least one item.']
+        data = {
+            'tokens': [],
+            'payload': '{non-valid-json}'
+        }
+
+        response = self.test_app.post(self.base_url, data, expect_errors=True)
+        self.assertEqual(response.json, {'error': error_list})

@@ -16,8 +16,10 @@ test_engine = create_engine('sqlite:///:memory:',
 env = os.environ.get('APP_ENV', 'prod')
 
 if env == 'prod':
-    session = sessionmaker(bind=prod_engine)
+    engine = prod_engine
 elif env == 'dev':
-    session = sessionmaker(bind=dev_engine)
-else:
-    session = sessionmaker(bind=test_engine)
+    engine = dev_engine
+elif env == 'test':
+    engine = test_engine
+
+session = sessionmaker(bind=engine)

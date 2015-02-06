@@ -11,14 +11,19 @@ db = session()
 @app.route('/', method='POST')
 @authenticated
 def notify():
-#    try:
-#        payload = json.loads(request.forms.get('payload'))
-#    except ValueError:
-#        return {'error': 'Payload must be a valid json.'}
-    payload = {}
-    data = {
-        'tokens': request.forms.getall('tokens'),
-        'payload': payload
-    }
+    errors = []
+    tokens = request.forms.getlist('tokens')
+    payload = request.forms.get('payload')
 
-    return data
+    try:
+        payload = json.loads(payload)
+    except Exception:  # catching any Exception because don't raises ValueError. :(
+        errors.append('Payload must be a valid json.')
+
+    if len(tokens) == 0:
+        errors.append('Tokens need at least one item.')
+
+    if len(errors) > 0:
+        return {'error': errors}
+
+    return {'status': 'ok'}
