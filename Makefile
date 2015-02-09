@@ -15,3 +15,7 @@ test:
 coverage:
 	@export APP_ENV=test && coverage run --source=. -m unittest discover
 	@coverage report
+
+.PHONY: sync
+sync:
+	python sync.py

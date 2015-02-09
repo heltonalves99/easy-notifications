@@ -10,3 +10,8 @@ A python app to manage subscriptions and send push notifications to mobile devic
 ```
 	make test
 ```
+
+## run database sync
+```
+    make sync
+```
