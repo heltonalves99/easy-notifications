@@ -24,3 +24,10 @@ def check_pass():
     username, password = parse_auth(auth)
     user = db.query(User).filter(User.username == username).first()
     return sha256_crypt.verify(password, user.password)
+
+
+def check_exist(model, key, value):
+    obj = db.query(model).filter(key == value).first()
+    if obj:
+        return obj    
+    return None
