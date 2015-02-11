@@ -29,6 +29,13 @@ def check_pass():
     return sha256_crypt.verify(password, user.password)
 
 
+def check_exist(model, key, value):
+    obj = db.query(model).filter(key == value).first()
+    if obj:
+        return obj
+    return None
+
+
 def generate_token(size=20, chars=string.ascii_uppercase + string.digits):
     """
         from: http://stackoverflow.com/a/2257449/492161
