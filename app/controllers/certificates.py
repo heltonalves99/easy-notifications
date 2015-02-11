@@ -2,7 +2,7 @@ from bottle import Bottle, request, parse_auth
 
 from app.models.users import User
 from app.models.certificates import Certificate
-from app.utils import authenticated
+from app.utils import authenticated, generate_token
 from app.models import session
 
 app = Bottle()
@@ -40,7 +40,8 @@ def add_certificates():
         'type': request.forms.get('type'),
         'name': request.forms.get('name'),
         'cert_pem': request.forms.get('cert_pem'),
-        'key_pem': request.forms.get('key_pem')
+        'key_pem': request.forms.get('key_pem'),
+        'token': generate_token()
     }
     certificate = Certificate(**data)
     db.add(certificate)

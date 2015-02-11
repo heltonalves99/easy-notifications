@@ -1,3 +1,6 @@
+import string
+import random
+
 from bottle import request, response, parse_auth
 from passlib.hash import sha256_crypt
 from app.models.users import User
@@ -24,3 +27,10 @@ def check_pass():
     username, password = parse_auth(auth)
     user = db.query(User).filter(User.username == username).first()
     return sha256_crypt.verify(password, user.password)
+
+
+def generate_token(size=20, chars=string.ascii_uppercase + string.digits):
+    """
+        from: http://stackoverflow.com/a/2257449/492161
+    """
+    return ''.join(random.choice(chars) for _ in range(size))
