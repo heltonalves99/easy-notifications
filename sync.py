@@ -1,6 +1,6 @@
-from app.models.users import User
-from app.models.devices import Device
-from app.models.certificates import Certificate
+from app.models.users import User  # noqa
+from app.models.devices import Device  # noqa
+from app.models.certificates import Certificate  # noqa
 from app import models
 
 try:
