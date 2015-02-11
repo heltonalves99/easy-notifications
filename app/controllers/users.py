@@ -20,16 +20,16 @@ def users():
     obj_email = check_exist(User, User.email, email)
 
     if obj_user or obj_email:
-        response.status = 406
+        response.status = 400
         return {'status': 'error', 'message': 'username or'
-                                        ' email already registered!'}
+                ' email already registered!'}
 
     data = {
         'username': username,
         'email': email,
         'password': password
     }
-    
+
     user = User(**data)
     db.add(user)
     db.commit()

@@ -13,7 +13,7 @@ class TestUser(BaseTest):
         }
 
     def test_create_and_authenticate_user(self):
-        
+
         response = self.test_app.post(self.base_url, self.user, expect_errors=True)
         self.assertEqual(response.status_int, 200)
 
@@ -24,13 +24,13 @@ class TestUser(BaseTest):
     def test_verify_exist_user_registered(self):
         self.test_app.post(self.base_url, self.user, expect_errors=True)
 
-        self.user['username'] = 'coisa'
+        self.user['username'] = 'smith'
 
         response = self.test_app.post(self.base_url, self.user, expect_errors=True)
-        self.assertEqual(response.status_int, 406)
+        self.assertEqual(response.status_int, 400)
 
         self.user['username'] = 'john'
-        self.user['email'] = 'coisa@coisa.com'
+        self.user['email'] = 'smithmail@foobar.com'
 
         response = self.test_app.post(self.base_url, self.user, expect_errors=True)
-        self.assertEqual(response.status_int, 406)
+        self.assertEqual(response.status_int, 400)

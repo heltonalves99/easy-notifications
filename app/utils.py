@@ -29,5 +29,5 @@ def check_pass():
 def check_exist(model, key, value):
     obj = db.query(model).filter(key == value).first()
     if obj:
-        return obj    
+        return obj
     return None
