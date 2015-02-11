@@ -20,3 +20,14 @@ class Certificate(Base):
 
     def __repr__(self):
         return "<Certificate('%d', '%s')>" % (self.id, self.name)
+
+    @property
+    def cert_type(self):
+        types = {
+            'ios': {
+                'production': 'push_production',
+                'sandbox': 'push_sandbox'
+            }
+        }
+
+        return types[self.platform][self.type]
