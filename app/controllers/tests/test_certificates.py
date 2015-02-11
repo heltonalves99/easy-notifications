@@ -1,5 +1,3 @@
-import unittest
-
 from passlib.hash import sha256_crypt
 from app.models.certificates import Certificate
 from app.models.users import User
@@ -80,6 +78,7 @@ class TestCertificate(BaseTest):
 
         response = self.test_app.post(self.base_url, cert, expect_errors=True)
         cert['user_id'] = self.user1.id
+        cert['token'] = response.json['token']
         self.assertEqual(response.json, cert)
 
     def test_filter_by_user(self):

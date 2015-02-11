@@ -14,6 +14,7 @@ class Certificate(Base):
     type = Column(String(20))
     cert_pem = Column(Text)
     key_pem = Column(Text)
+    token = Column(String(30))
 
     user = relationship(User, backref=backref('certificates', order_by=id, cascade='delete,all'))
 
