@@ -18,13 +18,12 @@ def send_notification(certificate, devices, payload):
                                       key_string=certificate.key_pem)
 
     message = Message(devices, **payload)
-
     # Send the message.
     srv = APNs(con)
     try:
         res = srv.send(message)
-    except Exception as e:
-        print e
+    except Exception:
+        pass
     else:
         # Check failures. Check codes in APNs reference docs.
         for token, reason in res.failed.items():
@@ -66,7 +65,6 @@ def notify():
 
     if not tokens:
         errors.append('Tokens need at least one item.')
-        return {'errors': errors}
 
     for token in tokens:
         device = db.query(Device).filter(Device.token == token).first()
@@ -75,11 +73,11 @@ def notify():
         else:
             not_registered.append(token)
 
+    if errors:
+        return {'errors': errors}
+
     if devices:
         send_notification(certificate, devices, payload)
-
-    if errors:
-        return {'error': errors}
 
     return {'message': 'Push notification delivered.',
             'devices': devices,
