@@ -1,30 +1,30 @@
 import json
 
 from bottle import Bottle, request
-from apnsclient import Message, APNs
+from apnsclient import Message, APNs, Session
 from app.utils import authenticated
 from app.models import session
 from app.models.devices import Device
 from app.models.certificates import Certificate
-from . import apns_session
 
 app = Bottle()
 db = session()
 
 
 def send_notification(certificate, devices, payload):
+    apns_session = Session()
     con = apns_session.get_connection(certificate.cert_type,
                                       cert_string=certificate.cert_pem,
                                       key_string=certificate.key_pem)
 
-    message = Message(devices, alert="My message", badge=20)
+    message = Message(devices, **payload)
 
     # Send the message.
     srv = APNs(con)
     try:
         res = srv.send(message)
-    except:
-        print "Can't connect to APNs, looks like network is down"
+    except Exception as e:
+        print e
     else:
         # Check failures. Check codes in APNs reference docs.
         for token, reason in res.failed.items():
@@ -41,7 +41,6 @@ def send_notification(certificate, devices, payload):
         if res.needs_retry():
             # repeat with retry_message or reschedule your task
             retry_message = res.retry()
-    return True
 
 
 @app.route('/', method='POST')
@@ -67,6 +66,7 @@ def notify():
 
     if not tokens:
         errors.append('Tokens need at least one item.')
+        return {'errors': errors}
 
     for token in tokens:
         device = db.query(Device).filter(Device.token == token).first()

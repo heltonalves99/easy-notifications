@@ -1,17 +1,24 @@
-# easy-notifications
+# easy-notifications [alpha]
 A python app to manage subscriptions and send push notifications to mobile devices. 
 
-## run app
+
+## Cloning repo
 ```
-	python app.py
+	$ git clone git@github.com:raelmax/easy-notifications.git
+	$ cd easy-notifications
 ```
 
-## run tests
-```
-	make test
-```
-
-## run database sync
+## Sync database
 ```
     make sync
+```
+
+## Run app
+```
+	python run.py
+```
+
+## Run tests
+```
+	make test
 ```
