@@ -1,7 +1,7 @@
 import json
 
+from redis import StrictRedis
 from bottle import Bottle, request
-from apnsclient import Message, APNs, Session
 from app.utils import authenticated
 from app.models import session
 from app.models.devices import Device
@@ -9,37 +9,16 @@ from app.models.certificates import Certificate
 
 app = Bottle()
 db = session()
+redis_db = StrictRedis()
 
 
-def send_notification(certificate, devices, payload):
-    apns_session = Session()
-    con = apns_session.get_connection(certificate.cert_type,
-                                      cert_string=certificate.cert_pem,
-                                      key_string=certificate.key_pem)
-
-    message = Message(devices, **payload)
-    # Send the message.
-    srv = APNs(con)
-    try:
-        res = srv.send(message)
-    except Exception:
-        pass
-    else:
-        # Check failures. Check codes in APNs reference docs.
-        for token, reason in res.failed.items():
-            code, errmsg = reason
-            # according to APNs protocol the token reported here
-            # is garbage (invalid or empty), stop using and remove it.
-            print "Device failed: {0}, reason: {1}".format(token, errmsg)
-
-        # Check failures not related to devices.
-        for code, errmsg in res.errors:
-            print "Error: {}".format(errmsg)
-
-        # Check if there are tokens that can be retried
-        if res.needs_retry():
-            # repeat with retry_message or reschedule your task
-            retry_message = res.retry()
+def add_notification(certificate, devices, payload):
+    json_message = {
+        'devices': devices,
+        'payload': payload
+    }
+    json_message = json.dumps(json_message)
+    redis_db.publish(certificate.token, json_message)
 
 
 @app.route('/', method='POST')
@@ -74,11 +53,11 @@ def notify():
             not_registered.append(token)
 
     if errors:
-        return {'errors': errors}
+        return {'not_registered': not_registered,
+                'errors': errors}
 
     if devices:
-        send_notification(certificate, devices, payload)
+        add_notification(certificate, devices, payload)
 
-    return {'message': 'Push notification delivered.',
-            'devices': devices,
+    return {'message': 'Pushs sent to apple, see the web console to errors.',
             'not_registered': not_registered}
