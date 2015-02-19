@@ -14,11 +14,12 @@ class PushListener(threading.Thread):
         self.pubsub.subscribe(certificate.token)
 
         self.apns_session = Session()
-        self.con = self.apns_session.get_connection(certificate.cert_type,
-                                                    cert_string=certificate.cert_pem,
-                                                    key_string=certificate.key_pem)
+        self.certificate = certificate
 
     def _send_notification(self, message):
+        con = self.apns_session.get_connection(self.certificate.cert_type,
+                                               cert_string=self.certificate.cert_pem,
+                                               key_string=self.certificate.key_pem)
         push_data = json.loads(message)
         devices = push_data['devices']
         payload = push_data['payload']
@@ -26,7 +27,7 @@ class PushListener(threading.Thread):
         _message = Message(devices, **payload)
 
         # Send the message.
-        srv = APNs(self.con)
+        srv = APNs(con)
         try:
             res = srv.send(_message)
         except Exception as e:
