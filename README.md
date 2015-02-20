@@ -1,24 +1,17 @@
-# easy-notifications [alpha]
-A python app to manage subscriptions and send push notifications to mobile devices. 
+# Pena [alpha]
+A python app to manage subscriptions and send push notifications to mobile devices.
 
+## Features
 
-## Cloning repo
-```
-	$ git clone git@github.com:raelmax/easy-notifications.git
-	$ cd easy-notifications
-```
+- Restul API
+- Basic HTTP Auth
+- Accounts
+- Certificates (currently: Apple Production and Sandbox)
+- Devices
+- Send notifications to multiple devices
 
-## Sync database
-```
-    make sync
-```
+### Future
 
-## Run app
-```
-	python run.py
-```
-
-## Run tests
-```
-	make test
-```
+- Dashboard
+- Support to Android and others platforms
+- Improve tests
