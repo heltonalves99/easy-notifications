@@ -4,6 +4,11 @@ import threading
 from redis import StrictRedis
 from apnsclient import Message, APNs, Session
 
+from app.models import session
+from app.models.devices import Device
+
+db = session()
+
 
 class PushListener(threading.Thread):
     def __init__(self, certificate):
@@ -39,6 +44,11 @@ class PushListener(threading.Thread):
                 # according to APNs protocol the token reported here
                 # is garbage (invalid or empty), stop using and remove it.
                 print "Device failed: {0}, reason: {1}".format(token, errmsg)
+
+                # inactive device
+                t = db.query(Device).filter(Device.token == token).first()
+                t.status = False
+                db.commit()
 
             # Check failures not related to devices.
             for code, errmsg in res.errors:

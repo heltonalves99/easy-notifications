@@ -19,7 +19,8 @@ def devices():
     user = db.query(User).filter(User.username == username).first()
 
     certs = db.query(Certificate.id).filter(Certificate.user_id == user.id)
-    query = db.query(Device).join(Device.certificate).filter(Device.certificate_id.in_(certs))
+    query = db.query(Device).join(Device.certificate).filter(Device.certificate_id.in_(certs),
+                                                             Device.status == True)  # noqa
     data = []
 
     for item in query:
