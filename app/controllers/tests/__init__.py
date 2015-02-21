@@ -2,7 +2,8 @@ import unittest
 from app import main
 
 from webtest import TestApp
-from app.models import Base, test_engine, session
+from app.models import Base, session
+from app.settings import DB_ENGINE
 
 
 class BaseTest(unittest.TestCase):
@@ -14,7 +15,7 @@ class BaseTest(unittest.TestCase):
 
         self.test_app = TestApp(main)
         self.db = session()
-        Base.metadata.create_all(test_engine)
+        Base.metadata.create_all(DB_ENGINE)
 
     def tearDown(self):
-        Base.metadata.drop_all(test_engine)
+        Base.metadata.drop_all(DB_ENGINE)

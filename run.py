@@ -4,6 +4,7 @@ from app import main
 from app.controllers.tasks import PushListener
 from app.models import session
 from app.models.certificates import Certificate
+from app.settings import DEBUG
 
 db = session()
 redis_db = StrictRedis()
@@ -19,4 +20,4 @@ def connect_apns():
 
 if __name__ == '__main__':
     connect_apns()
-    run(main, host='localhost', port='8080', debug=True)
+    run(main, host='localhost', port='8080', debug=DEBUG)

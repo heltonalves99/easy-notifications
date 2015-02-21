@@ -65,7 +65,7 @@ class TestNotification(BaseTest):
         }
 
         response = self.test_app.post(self.base_url, data, expect_errors=True)
-        self.assertEqual(response.json, {'errors': ['Payload must be a valid json.']})
+        self.assertEqual(response.json['errors'], ['Payload must be a valid json.'])
 
     def test_tokens_need_at_least_one_item(self):
         self._auth()
@@ -78,7 +78,7 @@ class TestNotification(BaseTest):
         }
 
         response = self.test_app.post(self.base_url, data, expect_errors=True)
-        self.assertEqual(response.json, {'errors': ['Tokens need at least one item.']})
+        self.assertEqual(response.json['errors'], ['Tokens need at least one item.'])
 
     def test_need_return_error_list(self):
         self._auth()
