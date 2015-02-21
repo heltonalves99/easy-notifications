@@ -21,20 +21,15 @@ class PushListener(threading.Thread):
         self.apns_session = Session()
         self.certificate = certificate
 
-    def _send_notification(self, message):
+    def _send_notification(self, apns_message):
         con = self.apns_session.get_connection(self.certificate.cert_type,
                                                cert_string=self.certificate.cert_pem,
                                                key_string=self.certificate.key_pem)
-        push_data = json.loads(message)
-        devices = push_data['devices']
-        payload = push_data['payload']
-
-        _message = Message(devices, **payload)
 
         # Send the message.
         srv = APNs(con)
         try:
-            res = srv.send(_message)
+            res = srv.send(apns_message)
         except Exception as e:
             print e
         else:
@@ -56,11 +51,16 @@ class PushListener(threading.Thread):
 
             # Check if there are tokens that can be retried
             if res.needs_retry():
-                pass
-                # repeat with retry_message or reschedule your task
-                # retry_message = res.retry()
+                # repeat with retry message
+                self._send_notification(res.retry())
 
     def run(self):
         for item in self.pubsub.listen():
             if item['type'] == "message":
-                self._send_notification(item['data'])
+                data = json.loads(item['data'])
+                devices = data['devices']
+                payload = data['payload']
+
+                apns_message = Message(devices, **payload)
+
+                self._send_notification(apns_message)
