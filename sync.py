@@ -1,6 +1,7 @@
 from app.models.users import User  # noqa
 from app.models.devices import Device  # noqa
 from app.models.certificates import Certificate  # noqa
+from app.models.console import Message  # noqa
 from app import models
 from app.settings import DB_ENGINE
 
