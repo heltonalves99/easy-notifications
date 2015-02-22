@@ -23,8 +23,9 @@ def message():
     data = []
 
     for item in query:
-        dict = item.__dict__
-        dict.pop('_sa_instance_state')
-        data.append(dict)
+        dic = item.__dict__
+        dic['created_at'] = dic['created_at'].isoformat()
+        dic.pop('_sa_instance_state')
+        data.append(dic)
 
     return {'results': data}
