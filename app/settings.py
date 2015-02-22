@@ -6,7 +6,9 @@ APP_ENV = os.environ.get('APP_ENV', 'dev')
 DEBUG = True if APP_ENV in ['dev', 'test'] else False
 
 ENGINES = {
-    'dev': create_engine('sqlite:///database.sqlite3', echo=False),
+    'dev': create_engine('sqlite:///database.sqlite3',
+                         connect_args={'check_same_thread': False},
+                         echo=False),
     'prod': create_engine('sqlite:///database.sqlite3', echo=False),
     'test': create_engine('sqlite:///:memory:',
                           connect_args={'check_same_thread': False},

@@ -15,7 +15,8 @@ def connect_apns():
 
     # start certificates threads
     for cert in certificates:
-        listener = PushListener(cert)
+        listener = PushListener(cert.id)
+        listener.setDaemon(True)
         listener.start()
 
 if __name__ == '__main__':

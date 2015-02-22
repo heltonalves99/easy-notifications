@@ -7,21 +7,21 @@ from apnsclient import Message, APNs, Session
 
 from app.models import session
 from app.models.devices import Device
+from app.models.certificates import Certificate
 from app.models.console import Message as LogMessage
-
-db = session()
 
 
 class PushListener(threading.Thread):
-    def __init__(self, certificate):
+    def __init__(self, cert_pk):
         threading.Thread.__init__(self)
 
+        self.db = session()
         self.redis = StrictRedis()
         self.pubsub = self.redis.pubsub()
-        self.pubsub.subscribe(certificate.token)
+        self.certificate = self.db.query(Certificate).get(cert_pk)
 
+        self.pubsub.subscribe(self.certificate.token)
         self.apns_session = Session()
-        self.certificate = certificate
 
     def _log_it(self, message):
         msg = {
@@ -31,8 +31,8 @@ class PushListener(threading.Thread):
         }
 
         log = LogMessage(**msg)
-        db.add(log)
-        db.commit()
+        self.db.add(log)
+        self.db.commit()
 
     def _send_notification(self, apns_message):
         con = self.apns_session.get_connection(self.certificate.cert_type,
@@ -56,9 +56,9 @@ class PushListener(threading.Thread):
                 self._log_it(log_message)
 
                 # inactive device token
-                t = db.query(Device).filter(Device.token == token).first()
+                t = self.db.query(Device).filter(Device.token == token).first()
                 t.status = False
-                db.commit()
+                self.db.commit()
 
             # Check failures not related to devices.
             for code, errmsg in res.errors:
