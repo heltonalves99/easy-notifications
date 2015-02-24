@@ -1,8 +1,10 @@
 import string
 import random
+from math import ceil
 
 from bottle import request, response, parse_auth
 from passlib.hash import sha256_crypt
+
 from app.models.users import User
 from app.models import db
 
@@ -40,3 +42,24 @@ def generate_token(size=20, chars=string.ascii_uppercase + string.digits):
         from: http://stackoverflow.com/a/2257449/492161
     """
     return ''.join(random.choice(chars) for _ in range(size))
+
+
+def paginate(query, page=1, items_by_page=20):
+    count = query.count()
+    qtd_pages = int(ceil(count / items_by_page))
+
+    prev = (page - 1) if page > 0 else None
+    next = (page + 1) if page < qtd_pages else None
+    start = (page - 1) * items_by_page
+    end = start + items_by_page
+
+    pagination = {
+        'pagination': {
+            'page': page,
+            'prev': prev,
+            'next': next
+        },
+        'items': query[start:end]
+    }
+
+    return pagination
