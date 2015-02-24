@@ -11,8 +11,9 @@ db = session()
 
 def authenticated(func):
     def wrapper(*args, **kwargs):
-        if check_pass():
-            return func(*args, **kwargs)
+        check = check_pass()
+        if check[0]:
+            return func(check[1], *args, **kwargs)
         response.status = 401
         return {'status': 'error', 'message': 'Error with auth data provided.'}
     return wrapper
@@ -26,7 +27,7 @@ def check_pass():
 
     username, password = parse_auth(auth)
     user = db.query(User).filter(User.username == username).first()
-    return sha256_crypt.verify(password, user.password)
+    return sha256_crypt.verify(password, user.password), user
 
 
 def check_exist(model, key, value):

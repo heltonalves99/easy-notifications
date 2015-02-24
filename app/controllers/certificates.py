@@ -1,22 +1,14 @@
-from bottle import Bottle, request, parse_auth
+from bottle import Bottle, request
 
-from app.models.users import User
 from app.models.certificates import Certificate
-from app.utils import authenticated, generate_token
-from app.models import session
+from app.utils import authenticated, generate_token, db
 
 app = Bottle()
-db = session()
 
 
 @app.route('/', method='GET')
 @authenticated
-def certificates():
-    auth = request.headers.get('Authorization')
-    username, password = parse_auth(auth)
-
-    user = db.query(User).filter(User.username == username).first()
-
+def certificates(user):
     query = db.query(Certificate).filter(Certificate.user == user)
     data = []
     for item in query:
@@ -28,12 +20,7 @@ def certificates():
 
 @app.route('/', method='POST')
 @authenticated
-def add_certificates():
-    auth = request.headers.get('Authorization')
-    username, password = parse_auth(auth)
-
-    user = db.query(User).filter(User.username == username).first()
-
+def add_certificates(user):
     data = {
         'user': user,
         'platform': request.forms.get('platform'),

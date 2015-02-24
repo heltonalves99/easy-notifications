@@ -1,23 +1,15 @@
-from bottle import Bottle, request, parse_auth
+from bottle import Bottle, request
 
 from app.models.certificates import Certificate
 from app.models.devices import Device
-from app.models.users import User
-from app.models import session
-from app.utils import authenticated
+from app.utils import authenticated, db
 
 app = Bottle()
-db = session()
 
 
 @app.route('/', method='GET')
 @authenticated
-def devices():
-    auth = request.headers.get('Authorization')
-    username, password = parse_auth(auth)
-
-    user = db.query(User).filter(User.username == username).first()
-
+def devices(user):
     certs = db.query(Certificate.id).filter(Certificate.user_id == user.id)
     query = db.query(Device).join(Device.certificate).filter(Device.certificate_id.in_(certs),
                                                              Device.status == True)  # noqa
@@ -33,7 +25,7 @@ def devices():
 
 @app.route('/', method='POST')
 @authenticated
-def add_devices():
+def add_devices(user):
     cert_pk = int(request.forms.get('certificate'))
     cert = db.query(Certificate).filter(Certificate.id == cert_pk).first()
     data = {

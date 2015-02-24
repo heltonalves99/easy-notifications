@@ -2,13 +2,11 @@ import json
 
 from redis import StrictRedis
 from bottle import Bottle, request
-from app.utils import authenticated
-from app.models import session
+from app.utils import authenticated, db
 from app.models.devices import Device
 from app.models.certificates import Certificate
 
 app = Bottle()
-db = session()
 redis_db = StrictRedis()
 
 
@@ -23,7 +21,7 @@ def add_notification(certificate, devices, payload):
 
 @app.route('/', method='POST')
 @authenticated
-def notify():
+def notify(user):
     devices = []
     not_registered = []
     errors = []

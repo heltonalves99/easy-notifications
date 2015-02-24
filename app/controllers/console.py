@@ -1,23 +1,15 @@
-from bottle import Bottle, request, parse_auth
+from bottle import Bottle
 
 from app.models.certificates import Certificate
 from app.models.console import Message
-from app.models.users import User
-from app.models import session
-from app.utils import authenticated
+from app.utils import authenticated, db
 
 app = Bottle()
-db = session()
 
 
 @app.route('/', method='GET')
 @authenticated
-def message():
-    auth = request.headers.get('Authorization')
-    username, password = parse_auth(auth)
-
-    user = db.query(User).filter(User.username == username).first()
-
+def message(user):
     certs = db.query(Certificate.id).filter(Certificate.user_id == user.id)
     query = db.query(Message).join(Message.certificate).filter(Message.certificate_id.in_(certs))
     data = []

@@ -2,12 +2,10 @@ from bottle import Bottle, request, response
 from passlib.hash import sha256_crypt
 
 from app.models.users import User
-from app.models import session
 
-from app.utils import check_exist
+from app.utils import check_exist, db
 
 app = Bottle()
-db = session()
 
 
 @app.route('/', method='POST')
