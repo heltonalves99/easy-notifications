@@ -2,7 +2,7 @@ import unittest
 from app import main
 
 from webtest import TestApp
-from app.models import Base, session
+from app.models import Base, db
 from app.settings import DB_ENGINE
 
 
@@ -14,7 +14,7 @@ class BaseTest(unittest.TestCase):
         from app.models.users import User  # noqa
 
         self.test_app = TestApp(main)
-        self.db = session()
+        self.db = db
         Base.metadata.create_all(DB_ENGINE)
 
     def tearDown(self):

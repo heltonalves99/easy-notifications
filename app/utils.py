@@ -4,9 +4,7 @@ import random
 from bottle import request, response, parse_auth
 from passlib.hash import sha256_crypt
 from app.models.users import User
-from app.models import session
-
-db = session()
+from app.models import db
 
 
 def authenticated(func):

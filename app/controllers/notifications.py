@@ -2,7 +2,8 @@ import json
 
 from redis import StrictRedis
 from bottle import Bottle, request
-from app.utils import authenticated, db
+from app.utils import authenticated
+from app.models import db
 from app.models.devices import Device
 from app.models.certificates import Certificate
 

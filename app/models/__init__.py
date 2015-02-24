@@ -5,3 +5,4 @@ from app.settings import DB_ENGINE
 Base = declarative_base()
 
 session = sessionmaker(bind=DB_ENGINE)
+db = session()

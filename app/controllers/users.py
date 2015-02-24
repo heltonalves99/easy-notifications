@@ -2,8 +2,9 @@ from bottle import Bottle, request, response
 from passlib.hash import sha256_crypt
 
 from app.models.users import User
+from app.models import db
 
-from app.utils import check_exist, db
+from app.utils import check_exist
 
 app = Bottle()
 

@@ -2,7 +2,8 @@ from bottle import Bottle, request
 
 from app.models.certificates import Certificate
 from app.models.devices import Device
-from app.utils import authenticated, db
+from app.models import db
+from app.utils import authenticated
 
 app = Bottle()
 

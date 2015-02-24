@@ -2,7 +2,8 @@ from bottle import Bottle
 
 from app.models.certificates import Certificate
 from app.models.console import Message
-from app.utils import authenticated, db
+from app.models import db
+from app.utils import authenticated
 
 app = Bottle()
 

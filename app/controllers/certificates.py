@@ -1,7 +1,8 @@
 from bottle import Bottle, request
 
 from app.models.certificates import Certificate
-from app.utils import authenticated, generate_token, db
+from app.models import db
+from app.utils import authenticated, generate_token
 
 app = Bottle()
 
