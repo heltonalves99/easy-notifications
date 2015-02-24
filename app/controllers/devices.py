@@ -3,25 +3,30 @@ from bottle import Bottle, request
 from app.models.certificates import Certificate
 from app.models.devices import Device
 from app.models import db
-from app.utils import authenticated
+from app.utils import authenticated, paginate
 
 app = Bottle()
 
 
 @app.route('/', method='GET')
+@app.route('/<page:int>', method='GET')
 @authenticated
-def devices(user):
+def devices(user, page=1):
     certs = db.query(Certificate.id).filter(Certificate.user_id == user.id)
     query = db.query(Device).join(Device.certificate).filter(Device.certificate_id.in_(certs),
                                                              Device.status == True)  # noqa
+
+    pagination = paginate(query=query, page=page)
+
     data = []
+    for item in pagination['results']:
+        dic = item.__dict__
+        dic.pop('_sa_instance_state')
+        data.append(dic)
 
-    for item in query:
-        dict = item.__dict__
-        dict.pop('_sa_instance_state')
-        data.append(dict)
+    pagination['results'] = data
 
-    return {'results': data}
+    return pagination
 
 
 @app.route('/', method='POST')

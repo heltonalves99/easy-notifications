@@ -1,5 +1,3 @@
-import unittest
-
 from passlib.hash import sha256_crypt
 from app.models.certificates import Certificate
 from app.models.devices import Device
@@ -56,8 +54,7 @@ class TestDevice(BaseTest):
     def test_empty_json_response(self):
         self._auth()
         response = self.test_app.get(self.base_url, expect_errors=True)
-        empty_json = {'results': []}
-        self.assertEqual(response.json, empty_json)
+        self.assertEqual(response.json['results'], [])
 
     def test_manual_add_devices(self):
         self._auth()

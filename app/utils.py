@@ -48,7 +48,7 @@ def paginate(query, page=1, items_by_page=20):
     count = query.count()
     qtd_pages = int(ceil(count / items_by_page))
 
-    prev = (page - 1) if page > 0 else None
+    prev = (page - 1) if page > 1 else None
     next = (page + 1) if page < qtd_pages else None
     start = (page - 1) * items_by_page
     end = start + items_by_page
@@ -59,7 +59,7 @@ def paginate(query, page=1, items_by_page=20):
             'prev': prev,
             'next': next
         },
-        'items': query[start:end]
+        'results': query[start:end]
     }
 
     return pagination
